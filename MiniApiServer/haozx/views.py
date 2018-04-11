@@ -7,7 +7,6 @@ from utils.commom import *
 from utils.config import *
 import uuid,json,time
 from concurrent.futures import ThreadPoolExecutor
-from .forms import CaptchaTestForm
 # Create your views here.
 
 
@@ -27,8 +26,7 @@ class TokenMaker(View):
 class Sendmsg(View):
     # 短信发送模块
     def get(self, request):
-        captcha = CaptchaTestForm()
-        return render(request, 'haozx/sendmsg.html',{'captcha':captcha})
+        return render(request, 'haozx/sendmsg.html')
         # return HttpResponse('短信输入页面')
 
     def post(self, request):

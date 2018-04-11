@@ -24,6 +24,4 @@ urlpatterns = [
     path('api/sendmsg/', hzx.Sendmsg.as_view(), name='sendmsg'),
     path('api/checkmsg/', hzx.Checkmsg.as_view(), name='checkmsg'),
     path('api/getres/', hzx.GetRes.as_view(), name='getres'),
-    path('^captcha/', include('captcha.urls')),
-    # path('api-auth/', include('rest_framework.urls'))
 ]
