@@ -26,6 +26,21 @@ class TokenMaker(View):
         return response
 
 
+    def post(self, request):
+        # 访问页面挂载token
+        haozx = models.Haozx()
+        token = creToken()
+        haozx.token = token
+        haozx.save()
+        msg_res = {
+            'token': token,
+        }
+        response = HttpResponse(json.dumps(msg_res))
+        response['Content-Type'] = "application/json"
+        response['Access-Control-Allow-Origin'] = "*"
+        return response
+
+
 class Sendmsg(View):
     # 短信发送模块
     def get(self, request):
