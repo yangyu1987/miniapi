@@ -20,7 +20,10 @@ class TokenMaker(View):
         msg_res = {
             'token': token,
         }
-        return JsonResponse(msg_res)
+        response = HttpResponse(json.dumps(msg_res))
+        response['Content-Type'] = "application/json"
+        response['Access-Control-Allow-Origin'] = "*"
+        return response
 
 
 class Sendmsg(View):
@@ -56,7 +59,10 @@ class Sendmsg(View):
                     'info': '短信发送成功',
                     'token': token
                 }
-                return JsonResponse(msg_res)
+                response = HttpResponse(json.dumps(msg_res))
+                response['Content-Type'] = "application/json"
+                response['Access-Control-Allow-Origin'] = "*"
+                return response
             else:
                 sql_res.smsSend = 0
                 sql_res.save()
@@ -64,14 +70,20 @@ class Sendmsg(View):
                     'success': 0,
                     'info': '短信发送失败',
                 }
-                return JsonResponse(msg_res)
+                response = HttpResponse(json.dumps(msg_res))
+                response['Content-Type'] = "application/json"
+                response['Access-Control-Allow-Origin'] = "*"
+                return response
         except:
             # token 校验失败
             msg_res = {
                 'success': 0,
                 'info': '非法请求',
             }
-            return JsonResponse(msg_res)
+            response = HttpResponse(json.dumps(msg_res))
+            response['Content-Type'] = "application/json"
+            response['Access-Control-Allow-Origin'] = "*"
+            return response
 
 
 class Checkmsg(View):
@@ -91,13 +103,19 @@ class Checkmsg(View):
                 'success': 1,
                 'info': '短信校验成功'
             }
-            return JsonResponse(msg_res)
+            response = HttpResponse(json.dumps(msg_res))
+            response['Content-Type'] = "application/json"
+            response['Access-Control-Allow-Origin'] = "*"
+            return response
         except:
             msg_res = {
                 'success':0,
                 'info':'短信校验失败'
             }
-            return JsonResponse(msg_res)
+            response = HttpResponse(json.dumps(msg_res))
+            response['Content-Type'] = "application/json"
+            response['Access-Control-Allow-Origin'] = "*"
+            return response
 
 
 class GetRes(View):
@@ -113,8 +131,20 @@ class GetRes(View):
         token = request.POST.get('token', '')
         sernames = SERVICENAMES
         #开始访问
+        sql_res = ''
         try:
             sql_res = models.Haozx.objects.get(token=token, codeUsed=0)
+        except:
+            msg_res = {
+                'success': 0,
+                'info': '非法访问'
+            }
+            response = HttpResponse(json.dumps(msg_res))
+            response['Content-Type'] = "application/json"
+            response['Access-Control-Allow-Origin'] = "*"
+            return response
+
+        if sql_res:
             sql_res.name = name
             sql_res.idCard = idCard
             mobile = str(sql_res.phoneNum)
@@ -130,10 +160,7 @@ class GetRes(View):
             sql_res.codeUsed = 1
             sql_res.save()
             # 暴露结果
-            return JsonResponse(res_dic)
-        except:
-            msg_res = {
-                'success': 0,
-                'info': '非法访问'
-            }
-            return JsonResponse(msg_res)
+            response = HttpResponse(json.dumps(res_dic))
+            response['Content-Type'] = "application/json"
+            response['Access-Control-Allow-Origin'] = "*"
+            return response
